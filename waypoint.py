@@ -76,7 +76,7 @@ class move2goal:
         #r = distance.euclidean(p, p_f)
         v = [0,0]
         v[0] = np.linalg.norm(p-p_f)
-        p_vector = np.array([p_f[0]-p[0],p_f[1]-p_f[0]]) #direction vector
+        p_vector = np.array([p_f[0]-p[0],p_f[1]-p[1]]) #direction vector
         theta = self.pose.theta
         o_vector = np.array([np.cos(theta),np.sin(theta)]) #orientation of the robot
         v[1] = np.arctan2(o_vector[0]*p_vector[1]-o_vector[1]*p_vector[0],o_vector[0]*p_vector[0]+o_vector[1]*p_vector[1]) #takes care of clockwise and anti clockwise
