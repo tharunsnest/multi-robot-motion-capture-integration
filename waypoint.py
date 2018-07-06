@@ -67,7 +67,7 @@ class move2goal:
             t1 = rospy.Time.now().to_sec()
             current_angle = angular_speed*(t1-t0)
             self.pose.theta = self.pose.theta + current_angle * (relative_angle/abs(relative_angle)) 
-            self.pose_pub(self.pose.theta)
+            self.pose_pub.publish(self.pose)
         t.angular.z = 0
         self.v_pub.publish(t)
 
