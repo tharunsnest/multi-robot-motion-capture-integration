@@ -2,10 +2,10 @@
 
 import rospy
 import numpy as np
-from scipy import pi
-from scipy.spatial import distance
+from numpy import pi
+#from scipy.spatial import distance
 from geometry_msgs.msg import Twist
-from std_msgs.msg import Pose2D
+from geometry_msgs.msg import Pose2D
 #PI = 3.1415926535
 theta_init = pi/2
 class move2goal:
