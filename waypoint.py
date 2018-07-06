@@ -55,7 +55,7 @@ class move2goal:
     def rotate(self,relative_angle):
         t = Twist()
         #relative_angle = PI/2
-        current_angle = self.pose.theta
+        current_angle = 0
         if relative_angle<0 : #clockwise
             angular_speed = -4.25
         else:                 #anti_clockwise
@@ -66,7 +66,7 @@ class move2goal:
             self.v_pub.publish(t)
             t1 = rospy.Time.now().to_sec()
             current_angle = angular_speed*(t1-t0)
-            self.pose.theta = self.pose.theta + current_angle * (relative_angle/abs(relative_angle)) 
+            self.pose.theta = self.pose.theta + current_angle * np.sign(relative_angle) 
             self.pose_pub.publish(self.pose)
         t.angular.z = 0
         self.v_pub.publish(t)
