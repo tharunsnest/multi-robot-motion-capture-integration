@@ -44,13 +44,14 @@ class move2goal:
             t1=rospy.Time.now().to_sec()
             #Calculates distancePoseStamped
             current_distance= speed*(t1-t0)
-            self.pose.x = current_distance*np.cos(self.pose.theta)
-            self.pose.y = current_distance*np.sin(self.pose.theta)
-            self.pose_pub.publish(self.pose)
+            
         #After the loop, stops the robot
         t.linear.x = 0
         #Force the robot to stop
         self.v_pub.publish(t)
+        self.pose.x = distance*np.cos(self.pose.theta)
+        self.pose.y = distance*np.sin(self.pose.theta)
+        self.pose_pub.publish(self.pose)
 
     def rotate(self,relative_angle):
         t = Twist()
@@ -65,11 +66,11 @@ class move2goal:
         while(current_angle < abs(relative_angle)):
             self.v_pub.publish(t)
             t1 = rospy.Time.now().to_sec()
-            current_angle = angular_speed*(t1-t0)
-            self.pose.theta = self.pose.theta + current_angle * np.sign(relative_angle) 
-            self.pose_pub.publish(self.pose)
+            current_angle = abs(angular_speed)*(t1-t0)           
         t.angular.z = 0
         self.v_pub.publish(t)
+        self.pose.theta = self.pose.theta + current_angle * np.sign(relative_angle) 
+        self.pose_pub.publish(self.pose)
 
 
     def velocity_vector(self,p,p_f):
