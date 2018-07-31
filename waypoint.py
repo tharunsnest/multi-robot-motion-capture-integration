@@ -18,6 +18,7 @@ class move2goal:
         self.pose.x = 0
         self.pose.y = 0
         self.pose.theta = theta_init
+        selt.rate = rospy.Rate(4)
 
     def waypoint(self,p,p_f):
         p = np.array(p)
@@ -44,29 +45,33 @@ class move2goal:
             t1=rospy.Time.now().to_sec()
             #Calculates distancePoseStamped
             current_distance= speed*(t1-t0)
+            self.rate.sleep()
             
         #After the loop, stops the robot
         t.linear.x = 0
         #Force the robot to stop
         self.v_pub.publish(t)
-        self.pose.x = distance*np.cos(self.pose.theta)
-        self.pose.y = distance*np.sin(self.pose.theta)
-        self.pose_pub.publish(self.pose)
+        # self.pose.x = distance*np.cos(self.pose.theta)
+        # self.pose.y = distance*np.sin(self.pose.theta)
+        # self.pose_pub.publish(self.pose)
 
     def rotate(self,relative_angle):
         t = Twist()
         #relative_angle = PI/2
         current_angle = 0
         if relative_angle<0 : #clockwise
-            angular_speed = -4.25
+            angular_speed = -0.1
         else:                 #anti_clockwise
-            angular_speed = 4.25
+            angular_speed = 0.1
         t.angular.z = angular_speed
         t0 = rospy.Time.now().to_sec()
+        
         while(current_angle < abs(relative_angle)):
             self.v_pub.publish(t)
             t1 = rospy.Time.now().to_sec()
-            current_angle = abs(angular_speed)*(t1-t0)           
+            current_angle = abs(angular_speed)*(t1-t0)
+            self.rate.sleep()
+
         t.angular.z = 0
         self.v_pub.publish(t)
         self.pose.theta = self.pose.theta + current_angle * np.sign(relative_angle) 
