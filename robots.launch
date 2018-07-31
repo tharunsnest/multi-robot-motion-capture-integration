@@ -1,0 +1,12 @@
+<launch>
+    <group ns="robot1">
+        <node name="turtle" pkg="turtlesim" type="turtlesim_node"/>
+        <node name="control" pkg="beginner_tutorials" type="waypoint.py"/>
+    </group>
+
+    <group ns="robot2">
+        <node name="turtle" pkg="turtlesim" type="turtlesim_node"/>
+        <node name="control" pkg="beginner_tutorials" type="waypoint.py"/>
+    </group>
+</launch>
+
