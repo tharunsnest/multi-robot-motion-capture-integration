@@ -18,7 +18,7 @@ class move2goal:
         self.pose.x = 0
         self.pose.y = 0
         self.pose.theta = theta_init
-        selt.rate = rospy.Rate(4)
+        self.rate = rospy.Rate(4)
 
     def waypoint(self,p,p_f):
         p = np.array(p)
