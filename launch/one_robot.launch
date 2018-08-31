@@ -6,6 +6,10 @@
      args="$(arg init_pose) -urdf -param /robot_description -model $(arg robot_name)"
      respawn="false" output="screen" />
 
+    <node name="control" pkg="beginner_tutorials" type="waypoint.py"/>
+
+    <!-- node name="update" pkg="beginner_tutorials" type="destination.py"/ -->
+
     <!-- node pkg="robot_state_publisher" type="state_publisher" 
           name="robot_state_publisher" output="screen"/ -->
 

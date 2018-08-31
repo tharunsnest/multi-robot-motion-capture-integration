@@ -31,12 +31,12 @@ class move2goal:
 
         self.rate = rospy.Rate(4)
     
-    def get_source(data):
+    def get_source(self,data):
         self.s_pose.x = data.x
         self.s_pose.y = data.y
         self.s_pose.theta = data.theta
     
-    def get_dest(data):
+    def get_dest(self,data):
         self.d_pose.x = data.x
         self.d_pose.y = data.y
         self.d_pose.theta = data.theta
@@ -49,6 +49,7 @@ class move2goal:
         v = self.velocity_vector(p,p_f) #should be in terms of r,theta
         self.rotate(v[1])
         self.move(v[0])
+        rospy.spin()
     #    p_t = get_position() #should be inside move()
     #    publish position to P_T
     #    p = p_t
@@ -98,7 +99,7 @@ class move2goal:
         t.angular.z = 0
         self.v_pub.publish(t)
         self.pose.theta = self.pose.theta + current_angle * np.sign(relative_angle) 
-        self.pose_pub.publish(self.pose)
+        # self.pose_pub.publish(self.pose)
 
     
 
@@ -121,6 +122,6 @@ class move2goal:
 if __name__ == '__main__':
     try:
         x = move2goal()
-        x.waypoint((0,0),(1,1))
+        x.waypoint((0,0),(0,0))
     except rospy.ROSInterruptException:
         pass
