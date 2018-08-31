@@ -11,14 +11,37 @@ theta_init = pi/2
 class move2goal:
     def __init__(self):
         rospy.init_node('create2_bot',anonymous=True)
-        self.v_pub = rospy.Publisher('cmd_vel',Twist,queue_size=10)#problem with multi robot need to create unique topics
-        self.pose_pub = rospy.Publisher('pose',Pose2D,queue_size=10)
-        self.pose_sub = rospy.Subscriber('pose',Pose2D,self.update_pose)
-        self.pose = Pose2D()
-        self.pose.x = 0
-        self.pose.y = 0
-        self.pose.theta = theta_init
+        self.v_pub = rospy.Publisher('cmd_vel',Twist,queue_size=10)
+    
+        self.source_pose_pub = rospy.Publisher('s_pose',Pose2D,queue_size=10)
+        self.source_pose_sub = rospy.Subscriber('s_pose',Pose2D,self.get_source) # needs to be changed to Pose from Pose2D
+
+        self.dest_pose_pub = rospy.Publisher('d_pose',Pose2D,queue_size=10)
+        self.dest_pose_sub = rospy.Subscriber('d_pose',Pose2D,self.get_dest) # needs to be changed to Pose from Pose2D
+    
+        self.s_pose = Pose2D()
+        self.s_pose.x = 0
+        self.s_pose.y = 0
+        self.s_pose.theta = theta_init
+
+        self.d_pose = Pose2D()
+        self.d_pose.x = 0
+        self.d_pose.y = 0
+        self.d_pose.theta = theta_init
+
         self.rate = rospy.Rate(4)
+    
+    def get_source(data):
+        self.s_pose.x = data.x
+        self.s_pose.y = data.y
+        self.s_pose.theta = data.theta
+    
+    def get_dest(data):
+        self.d_pose.x = data.x
+        self.d_pose.y = data.y
+        self.d_pose.theta = data.theta
+        self.waypoint((self.s_pose.x,self.s_pose.y),(self.d_pose.x,self.d_pose.y))
+
 
     def waypoint(self,p,p_f):
         p = np.array(p)
@@ -76,6 +99,8 @@ class move2goal:
         self.v_pub.publish(t)
         self.pose.theta = self.pose.theta + current_angle * np.sign(relative_angle) 
         self.pose_pub.publish(self.pose)
+
+    
 
 
     def velocity_vector(self,p,p_f):
