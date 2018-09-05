@@ -1,7 +1,9 @@
 import waypoint
+
 dest= [(1,1)]
 d_threshold= 0.01
 x= waypoint.move2goal()
+
 for i in range(len(dest)):
     
     p_f = waypoint.np.array(dest[i])
@@ -16,6 +18,5 @@ for i in range(len(dest)):
 
     while (abs(length) > d_threshold) :
         pass
-
-    
+  
     i = i+1
