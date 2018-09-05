@@ -15,6 +15,7 @@ for i in range(len(dest)):
     length=waypoint.np.linalg.norm(p-p_f) 
 
     while (abs(length) > d_threshold) :
+        pass
         
     
     i = i+1
