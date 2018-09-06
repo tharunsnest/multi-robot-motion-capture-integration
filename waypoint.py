@@ -49,7 +49,7 @@ class move2goal:
         v = self.velocity_vector(p,p_f) #should be in terms of r,theta
         self.rotate(v[1])
         self.move(v[0])
-        rospy.spin()
+    #    rospy.spin()
     #    p_t = get_position() #should be inside move()
     #    publish position to P_T
     #    p = p_t
@@ -123,5 +123,6 @@ if __name__ == '__main__':
     try:
         x = move2goal()
         x.waypoint((0,0),(0.1,0))
+        rospy.spin()
     except rospy.ROSInterruptException:
         pass
