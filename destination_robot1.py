@@ -7,7 +7,7 @@ from geometry_msgs.msg import Pose2D
 d_sample = 1.0 #takes care of drift
 d_threshold= 0.1 #tolerance with the destination
 
-dest= [(1,1)] #destination coordinates
+dest= [(1,0),(1,1),(0,1),(0,0),(1,0)] #destination coordinates
 
 
 def get_source(data):
