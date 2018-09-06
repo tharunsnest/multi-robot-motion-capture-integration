@@ -122,6 +122,6 @@ class move2goal:
 if __name__ == '__main__':
     try:
         x = move2goal()
-        x.waypoint((0,0),(0,0))
+        x.waypoint((0,0),(0.1,0))
     except rospy.ROSInterruptException:
         pass
