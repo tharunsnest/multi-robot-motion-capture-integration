@@ -49,14 +49,14 @@ class move2goal:
         v = self.velocity_vector(p,p_f) #should be in terms of r,theta
         self.rotate(v[1])
         self.move(v[0])
-    #    rospy.spin()
+        
     #    p_t = get_position() #should be inside move()
     #    publish position to P_T
     #    p = p_t
 
     def move(self,distance):
         t = Twist()
-        speed = 0.5
+        speed = 0.1
         #distance = 0.5
         t.linear.x = speed
         t0 = rospy.Time.now().to_sec()
@@ -84,9 +84,9 @@ class move2goal:
         #relative_angle = PI/2
         current_angle = 0
         if relative_angle<0 : #clockwise
-            angular_speed = -0.1
+            angular_speed = -0.05
         else:                 #anti_clockwise
-            angular_speed = 0.1
+            angular_speed = 0.05
         t.angular.z = angular_speed
         t0 = rospy.Time.now().to_sec()
         
@@ -98,7 +98,7 @@ class move2goal:
 
         t.angular.z = 0
         self.v_pub.publish(t)
-        self.pose.theta = self.pose.theta + current_angle * np.sign(relative_angle) 
+        self.s_pose.theta = self.s_pose.theta + current_angle * np.sign(relative_angle) 
         # self.pose_pub.publish(self.pose)
 
     
@@ -109,15 +109,12 @@ class move2goal:
         v = [0,0]
         v[0] = np.linalg.norm(p-p_f)
         p_vector = np.array([p_f[0]-p[0],p_f[1]-p[1]]) #direction vector
-        theta = self.pose.theta
+        theta = self.s_pose.theta
         o_vector = np.array([np.cos(theta),np.sin(theta)]) #orientation of the robot
         v[1] = np.arctan2(o_vector[0]*p_vector[1]-o_vector[1]*p_vector[0],o_vector[0]*p_vector[0]+o_vector[1]*p_vector[1]) #takes care of clockwise and anti clockwise
         #update_theta(v[1])
         return v
 
-    def update_pose(self,pose):
-        self.pose=pose
-    
 
 if __name__ == '__main__':
     try:

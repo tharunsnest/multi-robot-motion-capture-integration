@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 
 import numpy as np
+import waypoint
 import rospy
 from geometry_msgs.msg import Pose2D
+
 
 d_sample = 1.0 #takes care of drift
 d_threshold= 0.1 #tolerance with the destination
 
-dest= [(1,0),(1,1),(0,1),(0,0),(1,0)] #destination coordinates
+dest= [(0,0),(2,0)] #destination coordinates
 
 
 def get_source(data):
@@ -15,56 +17,112 @@ def get_source(data):
     s_pose.y = data.y
     s_pose.theta = data.theta 
 #x= waypoint.move2goal()
+"""
+def main():
+	rospy.init_node('robot1_destinations')
+	dest_pose_p = rospy.Publisher('robot1/d_pose',Pose2D,queue_size=10)
+	d_pose = Pose2D()
+	d_pose.x = 1
+	d_pose.y = 1
+	d_pose.theta = 0
+	#while True:
+	dest_pose_p.publish(d_pose)
+	rospy.spin()
 
-rospy.init_node('robot1_destinations',anonymous=True)
-dest_pose_pub = rospy.Publisher('robot1/d_pose',Pose2D,queue_size=10)
+
+if __name__ == '__main__':
+	main()
+
+"""
+
+rospy.init_node('robot1_destinations')
+rate = rospy.Rate(10)
+dest_pose_p = rospy.Publisher('robot1/d_pose',Pose2D,queue_size=10)
 source_pose_sub = rospy.Subscriber('robot1/s_pose',Pose2D,get_source)
 s_pose = Pose2D()
+s_pose.x = 0
+s_pose.y = 0
+s_pose.theta = 0
 d_pose = Pose2D()
+d_pose.x = 0
+d_pose.y = 0
+d_pose.theta = 0
 #check for theta value
 
-	
+
 for i in range(len(dest)):
-    
-    p_f = np.array(dest[i])
+
+	p_f = np.array(dest[i])
+
+	p = np.array((s_pose.x,s_pose.y)) #get source
+
+	d_pose.x = p_f[0]
+	d_pose.y = p_f[1]
+	dist = np.linalg.norm(p-p_f)
+
+	if (dist > d_sample):
+		cos_theta = np.dot(p-p_f,[1,0])/dist
+		sin_theta = np.cross(p-p_f,[1,0])/dist #will change for 3 dimentional vector
+		r = dist/d_sample
+
+		for j in range(int(r)):
+		    d_pose.x = p[0] + (j+1)*d_sample*cos_theta
+		    d_pose.y = p[1] + (j+1)*d_sample*sin_theta
+		    
+
+		    dist_h = d_sample
+		    p_fh = np.array((d_pose.x,d_pose.y))
+		    
+		    while not rospy.is_shutdown():
+			    connections = dest_pose_p.get_num_connections()
+			    rospy.loginfo('connections: %d', connections)
+			    if connections > 0:
+				dest_pose_p.publish(d_pose)
+				break
+			    rate.sleep()
+
+		    while (abs(dist_h) > d_threshold):
+
+			p_h = np.array((s_pose.x,s_pose.y))
+			dist_h = np.linalg.norm(p_h-p_fh)
+
+		d_pose.x = p[0] + (j+1)*(r-int(r))*d_sample*cos_theta
+		d_pose.y = p[1] + (j+1)*(r-int(r))*d_sample*sin_theta
+		dist_h = (r-int(r))*d_sample
+
+		while not rospy.is_shutdown():
+		    connections = dest_pose_p.get_num_connections()
+		    rospy.loginfo('connections: %d', connections)
+		    if connections > 0:
+			dest_pose_p.publish(d_pose)
+			break
+		    rate.sleep()
+
+		#dest_pose_p.publish(d_pose)
+		while (abs(dist_h) > d_threshold):
+
+			p_h = np.array((s_pose.x,s_pose.y))
+			dist_h = np.linalg.norm(p_h-p_fh)
+
+
+	else :
+		while not rospy.is_shutdown():
+			connections = dest_pose_p.get_num_connections()
+			rospy.loginfo('connections: %d', connections)
+			if connections > 0:
+				dest_pose_p.publish(d_pose)
+				break
+			rate.sleep()
+
+		#dist=np.linalg.norm(p-p_f) 
+		while (abs(dist) > d_threshold) :
+			    #dest_pose_p.publish(d_pose)
+			    #print 1
+			    p = np.array((s_pose.x,s_pose.y))
+			    print dist
+			    dist = np.linalg.norm(p-p_f)
+
+
 	
-    p = np.array(s_pose.x,s_pose.y) #get source
 
-    d_pose.x = p_f[0]
-    d_pose.y = p_f[1]
-    dist = np.linalg.norm(p-p_f)
-    
-    if (dist > d_sample):
-        cos_theta = np.dot(p-p_f)/dist
-        sin_theta = np.cross([0,1],p-p_f)/dist #will change for 3 dimentional vector
-        r = dist/d_sample
-
-        for j in range(int(r)):
-            d_pose.x = p[0] + (j+1)*d_sample*cos_theta
-            d_pose.y = p[1] + (j+1)*d_sample*sin_theta
-            
-            dest_pose_pub.publish(d_pose)
-
-            dist_h = d_sample
-            p_fh = np.array(d_pose.x,d_pose.y)
-            
-            while (abs(dist_h) > d_threshold):
-                p_h = np.array(s_pose.x,s_pose.y)
-                dist_h = np.linalg.norm(p_h-p_fh)
-        
-        d_pose.x = p[0] + (j+1)*(r-int(r))*d_sample*cos_theta
-        d_pose.y = p[1] + (j+1)*(r-int(r))*d_sample*sin_theta
-        dist_h = (r-int(r))*d_sample
-        dest_pose_pub.publish(d_pose)
-        while (abs(dist_h) > d_threshold):
-                p_h = np.array(s_pose.x,s_pose.y)
-                dist_h = np.linalg.norm(p_h-p_fh)
-
-
-    else :
-        dest_pose_pub.publish(d_pose)
-        #dist=np.linalg.norm(p-p_f) 
-        while (abs(dist) > d_threshold) :
-            p = np.array(s_pose.x,s_pose.y)
-            dist = np.linalg.norm(p-p_f)
-    
+	    

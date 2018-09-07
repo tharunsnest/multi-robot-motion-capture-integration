@@ -30,7 +30,7 @@ def source(model):
 
 if __name__ == '__main__':
 	rospy.init_node('source_pub')
-	rate = rospy.Rate(5)
+	rate = rospy.Rate(100)
 	robot1_pose_pub = rospy.Publisher('robot1/s_pose',Pose2D,queue_size=10)
 	robot2_pose_pub = rospy.Publisher('robot2/s_pose',Pose2D,queue_size=10)
 	robot1 = Pose2D()
