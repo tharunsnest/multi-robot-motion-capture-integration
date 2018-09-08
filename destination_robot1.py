@@ -69,8 +69,8 @@ for i in range(len(dest)):
 				dist_h = np.linalg.norm(p_h-p_fh)
 		
 
-		d_pose.x = p[0] + (j+1)*(r-int(r))*d_sample*cos_theta
-		d_pose.y = p[1] + (j+1)*(r-int(r))*d_sample*sin_theta
+		d_pose.x = d_pose.x + (r-int(r))*d_sample*cos_theta
+		d_pose.y = d_pose.y + (r-int(r))*d_sample*sin_theta
 		dist_h = (r-int(r))*d_sample
 
 		while not rospy.is_shutdown():
