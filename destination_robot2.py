@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import numpy as np
+import time
 import waypoint
 import rospy
 from geometry_msgs.msg import Pose2D
@@ -32,7 +33,7 @@ rate = rospy.Rate(10)
 dest_pose_p = rospy.Publisher('robot2/d_pose',Pose2D,queue_size=10)
 source_pose_sub = rospy.Subscriber('robot2/s_pose',Pose2D,get_source)
 
-
+time.sleep(3)
 
 for i in range(len(dest)):
 
