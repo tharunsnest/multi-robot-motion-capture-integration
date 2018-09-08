@@ -69,17 +69,19 @@ for i in range(len(dest)):
 				dist_h = np.linalg.norm(p_h-p_fh)
 		
 
-		d_pose.x = d_pose.x + (r-int(r))*d_sample*cos_theta
-		d_pose.y = d_pose.y + (r-int(r))*d_sample*sin_theta
-		dist_h = (r-int(r))*d_sample
+		if (r-int(r)) > d_threshold :
 
-		while not rospy.is_shutdown():
-			connections = dest_pose_p.get_num_connections()
-			rospy.loginfo('connections: %d', connections)
-			if connections > 0:
-				dest_pose_p.publish(d_pose)
-				break
-			rate.sleep()
+			d_pose.x = d_pose.x + (r-int(r))*d_sample*cos_theta
+			d_pose.y = d_pose.y + (r-int(r))*d_sample*sin_theta
+			dist_h = (r-int(r))*d_sample
+
+			while not rospy.is_shutdown():
+				connections = dest_pose_p.get_num_connections()
+				rospy.loginfo('connections: %d', connections)
+				if connections > 0:
+					dest_pose_p.publish(d_pose)
+					break
+				rate.sleep()
 
 		#dest_pose_p.publish(d_pose)
 		while (abs(dist_h) > d_threshold):
