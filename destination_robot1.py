@@ -69,7 +69,7 @@ for i in range(len(dest)):
 				dist_h = np.linalg.norm(p_h-p_fh)
 		
 
-		if (r-int(r)) > d_threshold :
+		if (r-int(r))*d_sample > d_threshold :
 
 			d_pose.x = d_pose.x + (r-int(r))*d_sample*cos_theta
 			d_pose.y = d_pose.y + (r-int(r))*d_sample*sin_theta
