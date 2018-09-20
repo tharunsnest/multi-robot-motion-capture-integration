@@ -1,9 +1,10 @@
 from source import Arr_s
+import numpy as np
 Arr_S =np.array(Arr_s)
 from multiprocessing import Pool
 from moveaway_h import funct #due to OS constraints, implemented in a separate script
 from moveaway_h import publishing
-import numpy as np
+
 
 
 
