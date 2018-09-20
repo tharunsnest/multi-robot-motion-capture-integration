@@ -35,7 +35,6 @@ if __name__ == '__main__':
 	robot2_pose_pub = rospy.Publisher('robot2/s_pose',Pose2D,queue_size=10)
 	robot1 = Pose2D()
 	robot2 = Pose2D()
-	Arr_s = []
 
 	while not rospy.is_shutdown():
 		robot1 = source('Robot1')
