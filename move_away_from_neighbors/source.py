@@ -4,7 +4,7 @@ import rospy
 from gazebo_msgs.srv import GetModelState
 from geometry_msgs.msg import Pose2D
 from tf.transformations import euler_from_quaternion
-n = 2 #number of robots
+n = 2 #number of robots need to edit the main function whenever changed
 Arr_s =[]
 
 def source(model):
