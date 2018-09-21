@@ -1,12 +1,15 @@
+#!/usr/bin/env python
+
+
 #from source import Arr_s
 import numpy as np
 #Arr_S =np.array(Arr_s)
-from multiprocessing import Pool
+#from multiprocessing import Pool
 # from moveaway_h import funct #due to OS constraints, implemented in a separate script
 # from moveaway_h import publishing
 
-def _init_s(Arr_sh):
-    #sharing the data for multiprocessing
+def _init_s(Arr_s):
+    
     global Arr_S
     Arr_S = Arr_sh
 
@@ -81,9 +84,11 @@ def check_for_boundary(d):
 
 def main():
 
-    from source import Arr_s
-    Arr_sh = np.array(Arr_s)
-
+    import source
+    print source.Arr_s
+    Arr_sh = np.array(source.Arr_s)
+    print(Arr_sh)
+"""
     pool1 = Pool(initializer = _init_s, initargs= (Arr_sh,))
     Arr_D = pool1.map(funct,Arr_sh)
     pool1.close()
@@ -100,7 +105,7 @@ def main():
     pool3.map(publishing,Arr_D_h)
     pool3.close()
     pool3.join()
-
+"""
 if __name__ == '__main__':
 
     main()
