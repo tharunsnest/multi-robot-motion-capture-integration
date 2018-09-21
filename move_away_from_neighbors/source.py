@@ -4,8 +4,8 @@ import rospy
 from gazebo_msgs.srv import GetModelState
 from geometry_msgs.msg import Pose2D
 from tf.transformations import euler_from_quaternion
-from threading import Thread
-import time
+#from threading import Thread
+#import time
 
 n = 2 #number of robots need to edit the main function whenever changed
 
@@ -37,7 +37,7 @@ def source(model):
 def main():
 	global Arr_s
 	
-	rospy.init_node('source_pub')
+	rospy.init_node('source_pub',disable_signals=True)
 	rate = rospy.Rate(100)
 	robot1_pose_pub = rospy.Publisher('robot1/s_pose',Pose2D,queue_size=10)
 	robot2_pose_pub = rospy.Publisher('robot2/s_pose',Pose2D,queue_size=10)
@@ -57,6 +57,8 @@ def main():
 		# for i in range(n):
 			
 		# 	Arr_s.append((robo))
+
+"""
 def prin():
 	
 	for i in range(10):
@@ -73,7 +75,7 @@ if __name__ == '__main__':
 	main()
 	#t1.join()
 	
-	
+"""	
 		
 		
 	

@@ -2,14 +2,16 @@
 
 
 #from source import Arr_s
+from threading import Thread
+import rospy
 import numpy as np
+import time
 #Arr_S =np.array(Arr_s)
-#from multiprocessing import Pool
+from multiprocessing import Pool
 # from moveaway_h import funct #due to OS constraints, implemented in a separate script
 # from moveaway_h import publishing
 
-def _init_s(Arr_s):
-    
+def _init_s(Arr_sh):
     global Arr_S
     Arr_S = Arr_sh
 
@@ -19,8 +21,8 @@ def funct(a):
     v = [0,0]
     for i in range(len(Arr_S)):
         v = v + a - Arr_S[i]
-        v_h = v/np.linalg.norm(v)
-        v_h = v_h * alpha_sample
+    v_h = v/np.linalg.norm(v)
+    v_h = v_h * alpha_sample
     return a+v_h
 
 # def check(a):
@@ -31,30 +33,35 @@ def publishing(a):
         return
     from geometry_msgs.msg import Pose2D
     import rospy
+    #rate = rospy.Rate(10)
     d_pose = Pose2D()
     d_pose.x = a[0]
     d_pose.y = a[1]
     d_pose.theta = 0
-    temp_str = 'dest_pub_'+str(a[2])
-    rospy.init_node(temp_str)
-    temp_str = 'robot'+str(a[2])+'/d_pose'
+    #temp_str = 'dest_pub_'+str(int(a[2]))
+    #rospy.init_node(temp_str,anonymous = True)
+    temp_str = '/robot'+str(int(a[2]))+'/d_pose'
     dest_pose_p = rospy.Publisher(temp_str,Pose2D,queue_size=10)
 #    check(a)
-    
+    i=0
     while not rospy.is_shutdown():
+	time.sleep(1)
         connections = dest_pose_p.get_num_connections()
-        #rospy.loginfo('connections: %d', connections)
+        rospy.loginfo('connections: %d', connections)
+        
+	
         if connections > 0:
             dest_pose_p.publish(d_pose)
+	    print -1
             break
-
+	
     global d
     d = [0,0]
     def get_source(data):
         global d
         d = [data.x,data.y]
 
-    temp_str = 'robot'+str(a[2])+'/s_pose'
+    temp_str = 'robot'+str(int(a[2]))+'/s_pose'
 
     source_pose_s = rospy.Subscriber(temp_str,Pose2D,get_source)
 
@@ -84,28 +91,65 @@ def check_for_boundary(d):
 
 def main():
 
-    import source
-    print source.Arr_s
-    Arr_sh = np.array(source.Arr_s)
-    print(Arr_sh)
-"""
-    pool1 = Pool(initializer = _init_s, initargs= (Arr_sh,))
-    Arr_D = pool1.map(funct,Arr_sh)
-    pool1.close()
-    pool1.join()
+  
+    while not rospy.is_shutdown():
     
-    pool2 = Pool(initializer=boundary_conditions,initargs=(-5,5,-5,5))
-    check = pool2.map(check_for_boundary,Arr_D)
-    pool2.close()
-    pool2.join()
-        
-    pool3 = Pool()
-    Arr_D_h = np.column_stack((Arr_D,np.arange(1,len(Arr_D)+1),check))
-    
-    pool3.map(publishing,Arr_D_h)
-    pool3.close()
-    pool3.join()
-"""
-if __name__ == '__main__':
+	    Arr_sh = np.array(source.Arr_s)
+	    
+	    
 
+	    pool1 = Pool(initializer = _init_s, initargs= (Arr_sh,))
+	    Arr_D = pool1.map(funct,Arr_sh)
+	    pool1.close()
+	    pool1.join()
+            print Arr_D
+	    
+	    pool2 = Pool(initializer=boundary_conditions,initargs=(-5,5,-5,5))
+	    check = pool2.map(check_for_boundary,Arr_D)
+	    pool2.close()
+	    pool2.join()
+	    print check
+	    if sum(check) == 0 :
+	        break
+	    pool3 = Pool()
+	    Arr_D_h = np.column_stack((Arr_D,np.arange(1,len(Arr_D)+1),check))
+	    print Arr_D_h
+	    
+	    pool3.map(publishing,Arr_D_h)
+	    pool3.close()
+	    pool3.join()
+    rospy.signal_shutdown('reached the boundaries')
+    
+
+if __name__ == '__main__':
+    import source
+    t = Thread(target = source.main)
+    t.start()
+    time.sleep(3)
     main()
+    t.join()
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
