@@ -65,9 +65,9 @@ def main():
 		robot5_pose_pub.publish(robot5)
 		Arr_s[0] = (robot1.x,robot1.y)
 		Arr_s[1] = (robot2.x,robot2.y)
-		Arr_s[2] = (robot1.x,robot1.y)
-		Arr_s[3] = (robot2.x,robot2.y)
-		Arr_s[4] = (robot1.x,robot1.y)
+		Arr_s[2] = (robot3.x,robot3.y)
+		Arr_s[3] = (robot4.x,robot4.y)
+		Arr_s[4] = (robot5.x,robot5.y)
 		
 		
 		

@@ -9,20 +9,31 @@ import numpy as np
 import time
 #Arr_S =np.array(Arr_s)
 from multiprocessing import Pool
+from multiprocessing import Lock
 # from moveaway_h import funct #due to OS constraints, implemented in a separate script
 # from moveaway_h import publishing
 
 def _init_s(Arr_sh):
-    global Arr_S
+    global Arr_S  
     Arr_S = Arr_sh
 
 
 def funct(a):
     alpha_sample = 0.5
+    alpha_threshold = 0.1
     v = [0,0]
-    for i in range(len(Arr_S)):
+    
+    n = len(Arr_S)
+    
+    for i in range(n):
+	#need to consider only the nearest
         v = v + a - Arr_S[i]
-    v_h = v/np.linalg.norm(v)
+    mod_v = np.linalg.norm(v)
+    if  mod_v < alpha_sample:
+	if mod_v < alpha_threshold :
+	    return a
+	return a+v
+    v_h = v/mod_v
     v_h = v_h * alpha_sample
     return a+v_h
 
@@ -48,7 +59,7 @@ def publishing(a):
     
 #    check(a)
     while not rospy.is_shutdown():
-	time.sleep(1)
+	time.sleep(0.5)
         connections = dest_pose_p.get_num_connections()
         rospy.loginfo('connections: %d', connections)
         
