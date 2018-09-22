@@ -2,6 +2,7 @@
 
 
 #from source import Arr_s
+
 from threading import Thread
 import rospy
 import numpy as np
@@ -29,6 +30,7 @@ def funct(a):
 #     a = Arr_S(a[2]-1)
 
 def publishing(a):
+    
     if a[3]==0:
         return
     from geometry_msgs.msg import Pose2D
@@ -40,10 +42,11 @@ def publishing(a):
     d_pose.theta = 0
     #temp_str = 'dest_pub_'+str(int(a[2]))
     #rospy.init_node(temp_str,anonymous = True)
-    temp_str = '/robot'+str(int(a[2]))+'/d_pose'
+    temp_str = 'robot'+str(int(a[2]))+'/d_pose'
     dest_pose_p = rospy.Publisher(temp_str,Pose2D,queue_size=10)
+    rospy.loginfo('name: %s', dest_pose_p.name)
+    
 #    check(a)
-    i=0
     while not rospy.is_shutdown():
 	time.sleep(1)
         connections = dest_pose_p.get_num_connections()
@@ -52,21 +55,22 @@ def publishing(a):
 	
         if connections > 0:
             dest_pose_p.publish(d_pose)
-	    print -1
+	    
             break
 	
     global d
     d = [0,0]
     def get_source(data):
         global d
-        d = [data.x,data.y]
+        d = np.array([data.x,data.y])
 
     temp_str = 'robot'+str(int(a[2]))+'/s_pose'
 
     source_pose_s = rospy.Subscriber(temp_str,Pose2D,get_source)
 
     while not rospy.is_shutdown():
-        if (np.linalg.norm(d-[a[0],a[1]]) <= 0.1) :
+        d_h = d - np.array([a[0],a[1]])
+        if (np.linalg.norm(d_h) <= 0.1) :
             break
         
     
@@ -90,7 +94,7 @@ def check_for_boundary(d):
     
 
 def main():
-
+    
   
     while not rospy.is_shutdown():
     
@@ -113,15 +117,35 @@ def main():
 	        break
 	    pool3 = Pool()
 	    Arr_D_h = np.column_stack((Arr_D,np.arange(1,len(Arr_D)+1),check))
-	    print Arr_D_h
+	    print Arr_D_h[0]
+
+	    threads = []
+	    for i in range(2):
+		time.sleep(0.5)
+	        thread = Thread(target = publishing, args = (Arr_D_h[i],))
+	        threads.append(thread)
+	        thread.start()
+
+	    for thread in threads:
+		thread.join()
 	    
-	    pool3.map(publishing,Arr_D_h)
-	    pool3.close()
-	    pool3.join()
+	    #t2 = Thread(target = publishing, args = (Arr_D_h[1],))
+	    #t2.start()
+
+	    #t.join()
+	    #publishing(Arr_D_h[0])
+	    #publishing(Arr_D_h[1])
+
+	    #pool3.map(publishing,Arr_D_h)
+	    #pool3.close()
+	    #pool3.join()
+
     rospy.signal_shutdown('reached the boundaries')
     
 
 if __name__ == '__main__':
+    rospy.init_node('source_pub')
+    
     import source
     t = Thread(target = source.main)
     t.start()

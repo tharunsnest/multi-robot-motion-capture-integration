@@ -37,7 +37,7 @@ def source(model):
 def main():
 	global Arr_s
 	
-	rospy.init_node('source_pub',disable_signals=True)
+	#rospy.init_node('source_pub',disable_signals=True)
 	rate = rospy.Rate(100)
 	robot1_pose_pub = rospy.Publisher('robot1/s_pose',Pose2D,queue_size=10)
 	robot2_pose_pub = rospy.Publisher('robot2/s_pose',Pose2D,queue_size=10)
