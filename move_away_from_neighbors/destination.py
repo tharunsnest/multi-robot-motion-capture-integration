@@ -18,7 +18,7 @@ def _init_s(Arr_sh):
 
 
 def funct(a):
-    alpha_sample = 1
+    alpha_sample = 0.5
     v = [0,0]
     for i in range(len(Arr_S)):
         v = v + a - Arr_S[i]
@@ -117,10 +117,10 @@ def main():
 	        break
 	    pool3 = Pool()
 	    Arr_D_h = np.column_stack((Arr_D,np.arange(1,len(Arr_D)+1),check))
-	    print Arr_D_h[0]
+	    print Arr_D_h
 
 	    threads = []
-	    for i in range(2):
+	    for i in range(source.n):
 		time.sleep(0.5)
 	        thread = Thread(target = publishing, args = (Arr_D_h[i],))
 	        threads.append(thread)
@@ -147,6 +147,7 @@ if __name__ == '__main__':
     rospy.init_node('source_pub')
     
     import source
+    print source.n
     t = Thread(target = source.main)
     t.start()
     time.sleep(3)
