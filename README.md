@@ -1,9 +1,5 @@
 # multi-robot-motion-detection
 
-
-"Clone This: https://github.com/tharunsnest/multi-robot-motion-capture-integration/tree/64ebf44d220f20aa666bf3746882a89ef674ec0f"
-
-
 # Instructions:
     Create 2 Drive for ros: https://github.com/AutonomyLab/create_autonomy
 
@@ -26,4 +22,37 @@
     rosrun [your-package-name] source.py
 
     rosrun [your-package-name] destination_robotX.py
+
+
+**waypoint.py :**
+
+Creates an object of move2goal waits for the 
+
+rospy to shutdown.  
+move2goal:
+
+·       s_pose, d_pose topics are created and subscribed to which are of Pose2D() type.
+
+·       an update of d_pose triggers waypoint(s_pose,d_pose)
+
+·       the namespaces for each bot are created in the launch files
+
+**source.py :**
+
+fetches data from gazebo and publishes it to respective s_pose for all the robots in the simulation  
+note: this can be modified to launch in a specific namespace
+
+**destination_robotX : **
+
+contains the destination coordinates as a list  
+subscribes -&gt; 
+
+robotX/s_pose  
+publishes -&gt; 
+
+robotX/d_pose
+
+drifting is tolerated by sampling the path into smaller lengths of d_sample.
+
+# Move away from neighbours: 
 
