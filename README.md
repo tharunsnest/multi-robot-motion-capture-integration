@@ -26,9 +26,8 @@
 
 **waypoint.py :**
 
-Creates an object of move2goal waits for the 
+Creates an object of move2goal waits for the rospy to shutdown.  
 
-rospy to shutdown.  
 move2goal:
 
 ·       s_pose, d_pose topics are created and subscribed to which are of Pose2D() type.
@@ -42,15 +41,11 @@ move2goal:
 fetches data from gazebo and publishes it to respective s_pose for all the robots in the simulation  
 note: this can be modified to launch in a specific namespace
 
-**destination_robotX : **
+**destination_robotX :**
 
 contains the destination coordinates as a list  
-subscribes -&gt; 
-
-robotX/s_pose  
-publishes -&gt; 
-
-robotX/d_pose
+subscribes -&gt; robotX/s_pose  
+publishes -&gt; robotX/d_pose
 
 drifting is tolerated by sampling the path into smaller lengths of d_sample.
 
