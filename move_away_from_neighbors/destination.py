@@ -30,6 +30,8 @@ def funct(a):
     for i in range(n):
         a_i = a - Arr_S[i]
         mod_a_i = np.linalg.norm(a_i)
+        if (mod_a_i == 0) :
+            continue
         if (mod_a_i >= r_nearest) :
             a_i = a_i/mod_a_i
             a_i = a_i * r_nearest
@@ -76,7 +78,6 @@ def publishing(a):
 	
         if connections > 0:
             dest_pose_p.publish(d_pose)
-	    
             break
 	
     global d
