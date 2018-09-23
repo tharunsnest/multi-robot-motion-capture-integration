@@ -21,18 +21,28 @@ def _init_s(Arr_sh):
 def funct(a):
     alpha_sample = 0.5
     alpha_threshold = 0.1
+    r_nearest = 1
+    reward_for_closeness = 5
     v = [0,0]
     
     n = len(Arr_S)
     
     for i in range(n):
-	#need to consider only the nearest
-        v = v + a - Arr_S[i]
+        a_i = a - Arr_S[i]
+        mod_a_i = np.linalg.norm(a_i)
+        if (mod_a_i >= r_nearest) :
+            a_i = a_i/mod_a_i
+            a_i = a_i * r_nearest
+            v = v + a_i
+            continue
+        a_i = a_i/mod_a_i
+        a_i = a_i * reward_for_closeness * r_nearest
+        v = v + a_i
     mod_v = np.linalg.norm(v)
     if  mod_v < alpha_sample:
-	if mod_v < alpha_threshold :
-	    return a
-	return a+v
+	    if mod_v < alpha_threshold :
+	        return a
+	    return a+v
     v_h = v/mod_v
     v_h = v_h * alpha_sample
     return a+v_h
@@ -126,19 +136,21 @@ def main():
 	    print check
 	    if sum(check) == 0 :
 	        break
-	    pool3 = Pool()
+	   # pool3 = Pool()
 	    Arr_D_h = np.column_stack((Arr_D,np.arange(1,len(Arr_D)+1),check))
 	    print Arr_D_h
-
+        
+        # multiprocessing.Pool.map not very convenient for publishing as ros is 
+        # not having enough time to create the publishers and connect them to the subscribers
 	    threads = []
 	    for i in range(source.n):
-		time.sleep(0.5)
-	        thread = Thread(target = publishing, args = (Arr_D_h[i],))
+		time.sleep(0.1)
+	        thread = Thread(target = publishing, args = (Arr_D_h[i],)) 
 	        threads.append(thread)
 	        thread.start()
 
 	    for thread in threads:
-		thread.join()
+		    thread.join()
 	    
 	    #t2 = Thread(target = publishing, args = (Arr_D_h[1],))
 	    #t2.start()
