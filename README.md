@@ -66,7 +66,7 @@ Moveaway(robot) {
 
     for robot_i in Arr_s :
 
-        if (distance(robot,robot_i) &gt;= r):
+        if (distance(robot,robot_i) >= r):
 
             since robot_i is far; reduce the effect of it on deciding the direction the robot needs to move.
 
