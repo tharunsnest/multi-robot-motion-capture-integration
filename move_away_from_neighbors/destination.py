@@ -21,8 +21,8 @@ def _init_s(Arr_sh):
 def funct(a):
     alpha_sample = 0.5
     alpha_threshold = 0.1
-    r_nearest = 1
-    reward_for_closeness = 5
+    r_nearest = 2
+    reward_for_closeness = 10
     v = [0,0]
     
     n = len(Arr_S)
