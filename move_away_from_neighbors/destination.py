@@ -21,9 +21,13 @@ def _init_s(Arr_sh):
 def funct(a):
     alpha_sample = 0.5
     alpha_threshold = 0.1
-    r_nearest = 2
+    r_nearest = 5
+    r_very_near = 2
     reward_for_closeness = 10
+    reward_for_very_closeness = 20
+
     v = [0,0]
+
     
     n = len(Arr_S)
     
@@ -32,14 +36,22 @@ def funct(a):
         mod_a_i = np.linalg.norm(a_i)
         if (mod_a_i == 0) :
             continue
-        if (mod_a_i >= r_nearest) :
-            a_i = a_i/mod_a_i
-            a_i = a_i * r_nearest
-            v = v + a_i
-            continue
-        a_i = a_i/mod_a_i
-        a_i = a_i * reward_for_closeness * r_nearest
+        if (mod_a_i <= r_nearest) :
+		if(mod_a_i <= r_very_near):
+			a_i = a_i/mod_a_i
+			a_i = a_i * reward_for_very_closeness * r_nearest
+			v = v + a_i
+			continue
+			
+		a_i = a_i/mod_a_i
+		a_i = a_i * reward_for_closeness * r_very_near
+		v = v + a_i
+		continue
+
+	a_i = a_i/mod_a_i
+        a_i = a_i * r_nearest
         v = v + a_i
+	
     mod_v = np.linalg.norm(v)
     if  mod_v < alpha_sample:
 	    if mod_v < alpha_threshold :
@@ -130,7 +142,7 @@ def main():
 	    pool1.join()
             print Arr_D
 	    
-	    pool2 = Pool(initializer=boundary_conditions,initargs=(-5,5,-5,5))
+	    pool2 = Pool(initializer=boundary_conditions,initargs=(-10,10,-10,10))
 	    check = pool2.map(check_for_boundary,Arr_D)
 	    pool2.close()
 	    pool2.join()

@@ -52,5 +52,55 @@
     </include>
     
   </group>
+
+
+  <!-- BEGIN ROBOT 6-->
+  <group ns="robot6">
+    <param name="tf_prefix" value="robot6_tf" />
+    <include file="$(find beginner_tutorials)/launch/one_robot.launch" >
+      <arg name="init_pose" value="-x 1.5 -y 1.5 -z 0" />
+      <arg name="robot_name"  value="Robot6" />
+    </include>
+    
+  </group>
+
+  <!-- BEGIN ROBOT 7-->
+  <group ns="robot7">
+    <param name="tf_prefix" value="robot7_tf" />
+    <include file="$(find beginner_tutorials)/launch/one_robot.launch" >
+      <arg name="init_pose" value="-x -1.5 -y 1.5 -z 0" />
+      <arg name="robot_name"  value="Robot7" />
+    </include>
+    
+  </group>
+
+  <!-- BEGIN ROBOT 8-->
+  <group ns="robot8">
+    <param name="tf_prefix" value="robot8_tf" />
+    <include file="$(find beginner_tutorials)/launch/one_robot.launch" >
+      <arg name="init_pose" value="-x 2 -y 0.5 -z 0" />
+      <arg name="robot_name"  value="Robot8" />
+    </include>
+    
+  </group>
+
+<!-- BEGIN ROBOT 9-->
+  <group ns="robot9">
+    <param name="tf_prefix" value="robot9_tf" />
+    <include file="$(find beginner_tutorials)/launch/one_robot.launch" >
+      <arg name="init_pose" value="-x -2 -y -0.5 -z 0" />
+      <arg name="robot_name"  value="Robot9" />
+    </include>
+    
+  </group>
+<!-- BEGIN ROBOT 10-->
+  <group ns="robot10">
+    <param name="tf_prefix" value="robot10_tf" />
+    <include file="$(find beginner_tutorials)/launch/one_robot.launch" >
+      <arg name="init_pose" value="-x 0 -y -1 -z 0" />
+      <arg name="robot_name"  value="Robot10" />
+    </include>
+    
+  </group>
 </launch>
 
